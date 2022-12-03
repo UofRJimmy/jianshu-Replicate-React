@@ -4,6 +4,7 @@ import {CSSTransition} from 'react-transition-group';
 import {connect} from 'react-redux';
 import {actionCreator} from './store/index.js';
 import { get } from 'immutable';
+import {actionCreators as loginActionCreators} from '../../pages/login/store' 
 
 class Header extends Component{
     getListArea(){
@@ -36,14 +37,18 @@ class Header extends Component{
         }
     }
     render(){
-        const{focused,handleInputFocus,handleInputBlur,list}=this.props;
+        const{focused,handleInputFocus,handleInputBlur,list,login,logout}=this.props;
         return(
             <HeaderWrapper>
                 <Logo href='/'/>
                 <Nav>
                     <NavItem className='left active'>首页</NavItem>
                     <NavItem className='left'>下载App</NavItem>
-                    <NavItem className='right'>登录</NavItem>
+                    {
+                        login ? 
+                        <NavItem onClick={logout} className='right'>log out</NavItem>:
+                        <a href='/login'><NavItem className='right'>登录</NavItem></a>
+                    }
                     <NavItem className='right'>
                     <span className="iconfont">&#xe636;</span>
                     </NavItem>
@@ -59,10 +64,12 @@ class Header extends Component{
                     
                 </Nav>
                 <Addition>
+                    <a href='/write'>
                     <Btn className='write'>
                         <span className="iconfont">&#xe600;</span>
                         写文章
                         </Btn>
+                        </a>
                     <Btn className='reg'>注册</Btn>
                 </Addition>
             </HeaderWrapper>
@@ -78,6 +85,7 @@ const mapStateToProps=(state)=>{
         page:state.get('header').get('page'),
         mouseIn:state.get('header').get('mouseIn'),
         totalpage:state.get('header').get('totalpage'),
+        login:state.get('login').get('login'),
     }
 }
 
@@ -112,6 +120,9 @@ const mapDispathToProps=(dispatch)=>{
             dispatch(actionCreator.changePage(1));
             }
         },
+        logout(){
+            dispatch(loginActionCreators.logout())
+        }
     }
 }
 
